@@ -1,5 +1,6 @@
-# React-Redux-Starter-Create-React-App
+# Movies-react-app
 
-Ce repo est une copie du projet  React-Redux-Starter seulement celui ci a été installé avec la commande create-react-app
+React app that gets movie teaser requested by user and also show suggestions
 
-De plus les versions de react et redux y sont plus récente.
+Based on Robin Lebhar [udemy's course :](https://www.udemy.com/course/react-redux-tutoriel-pour-debutants-en-francais/)
+
