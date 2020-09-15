@@ -8,7 +8,12 @@ const SearchBar = ()=>{
         setsearchText(evt.target.value)
         console.log(searchText)
     }
-    return <input onChange={handleChange} placeholder={placeHolder}/>
+    return(<div className="row">
+        <div className="col-md-8">
+            <input className="form-control input-lg" onChange={handleChange} placeholder={placeHolder}/>
+        </div>
+        
+        </div> )
 }
 
 export default SearchBar
