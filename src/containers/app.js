@@ -9,7 +9,13 @@ import VideoDetail from '../components/video-detail'
 const App  = ()=>{
   const [movies, setmovies] = useState([])
   const [popular,setpopular] = useState({})
-  let youtubeKey =''
+  const [youtubeKey, setYoutubekey] = useState('')
+  
+  async function getVideo(movie){
+    let request= `${API_END_POINT}movie/${movie.id}?append_to_response=videos&include_adult=false&api_key=${API_KEY}`;
+    let response = await axios.get(request)
+    return response.data.videos.results[0].key;              
+  }
   useEffect(() => {
     let ignore =false
 
@@ -17,22 +23,19 @@ const App  = ()=>{
         let response = await axios.get(`${API_END_POINT}${POPULAR_MOVIES}&api_key=${API_KEY}`)//.then(function(response){          
         if (!ignore) {
           setmovies(response.data.results.slice(1,6))
-          setpopular(response.data.results[0])                  
+          setpopular(response.data.results[0]) 
+          const key =  await getVideo(response.data.results[0])
+          setYoutubekey(key)
+
       }
     }
-    async function getVideo(){
-      let request= `${API_END_POINT}movie/${popular.id}?append_to_response=videos&include_adult=false&api_key=${API_KEY}`;
-      console.log(request);
-      let response = await axios.get(request)
-      youtubeKey = response.data.videos.results[0].key; 
-                  
-    }
+    
     
     getMovies()  
     
     return () => { //ajax call is done once
       ignore =true
-     getVideo()
+   
     };
   },[])
   
