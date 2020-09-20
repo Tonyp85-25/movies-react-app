@@ -45,7 +45,7 @@ const App  = ()=>{
   
   //useEffect(getMovies)
   //useLayoutEffect(getMovies)
-    return (<div>
+    return (<div className="search_bar">
         <SearchBar/>
         <div className="row">
           <div className="col-md-8">
@@ -53,13 +53,16 @@ const App  = ()=>{
             <VideoDetail title={popular.title} description={popular.overview} />
           </div>
           <div className="col-md-4">
-            <VideoList moviesList= {movies} />
+            <VideoList moviesList= {movies} callback={appCallback}/>
           </div>
         </div>
-        
-        
-        
+               
         </div>)
+        async function appCallback(movie){
+          const key = await getVideo(movie)
+            setpopular(movie)
+            setYoutubekey(key)
+        }
   }
 
 export default App
