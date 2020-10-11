@@ -3,8 +3,9 @@ import SearchBar from '../components/search-bar'
 import VideoList from './video-list'
 import Video from '../components/video'
 import axios from 'axios'
-import {API_KEY, API_END_POINT,POPULAR_MOVIES} from '../settings'
+import {API_KEY, API_END_POINT,POPULAR_MOVIES, SEARCH_URL} from '../settings'
 import VideoDetail from '../components/video-detail'
+
 
 const App  = ()=>{
   const [movies, setmovies] = useState([])
@@ -38,31 +39,50 @@ const App  = ()=>{
    
     };
   },[])
-  
+
+   async function onClickSearch(searchText){
+      if(searchText){
+        const request = `${API_END_POINT}${SEARCH_URL}&api_key=${API_KEY}&query=${searchText}`
+        let response = await axios.get(request)
+        if (response.data && response.data.results[0]){
+          if(response.data.results[0].title !== popular.title) {
+            onClickListItem(response.data.results[0])
+          }
+           
+        }
+     
+      }
+    
+      
+
+    }
+
+    async function onClickListItem(movie){
+      const key = await getVideo(movie)
+        setpopular(movie)
+        setYoutubekey(key)
+    } 
  
  
  
   
-  //useEffect(getMovies)
-  //useLayoutEffect(getMovies)
-    return (<div className="search_bar">
-        <SearchBar/>
+  
+    return (<div>
+    <div className="search_bar">
+        <SearchBar callback={onClickSearch}/>
+        </div>
         <div className="row">
           <div className="col-md-8">
             <Video videoId={youtubeKey}/>
             <VideoDetail title={popular.title} description={popular.overview} />
           </div>
           <div className="col-md-4">
-            <VideoList moviesList= {movies} callback={appCallback}/>
+            <VideoList moviesList= {movies} callback={onClickListItem}/>
           </div>
         </div>
-               
-        </div>)
-        async function appCallback(movie){
-          const key = await getVideo(movie)
-            setpopular(movie)
-            setYoutubekey(key)
-        }
+        </div> 
+        )
+        
   }
 
 export default App
