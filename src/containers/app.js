@@ -11,11 +11,16 @@ const App  = ()=>{
   const [movies, setmovies] = useState([])
   const [popular,setpopular] = useState({})
   const [youtubeKey, setYoutubekey] = useState('')
+ //const [emptyBar, setEmptyBar] = useState(false)
   
   async function getVideo(movie){
     let request= `${API_END_POINT}movie/${movie.id}?append_to_response=videos&include_adult=false&api_key=${API_KEY}`;
     let response = await axios.get(request)
-    return response.data.videos.results[0].key;              
+    if(response.data && response.data.videos.results[0]){     
+      return response.data.videos.results[0].key;  
+      
+    }
+                
   }
   useEffect(() => {
     let ignore =false
@@ -46,17 +51,18 @@ const App  = ()=>{
         let response = await axios.get(request)
         if (response.data && response.data.results[0]){
           if(response.data.results[0].title !== popular.title) {
-            onClickListItem(response.data.results[0])
+            onClickListItem(response.data.results[0],false)
           } 
         }
       }
     }
 
-    async function onClickListItem(movie){
-      const key = await getVideo(movie)
+    async function onClickListItem(movie, empty = true ){
+      const key = await getVideo(movie,empty)
         setpopular(movie)
         setYoutubekey(key)
         setRecommandations(movie)
+       // setEmptyBar(empty)  
     }
     
     async function setRecommandations(movie){
@@ -71,7 +77,7 @@ const App  = ()=>{
   
     return (<div>
     <div className="search_bar">
-        <SearchBar callback={onClickSearch}/>
+        <SearchBar callback={onClickSearch} />
         </div>
         <div className="row">
           <div className="col-md-8">
