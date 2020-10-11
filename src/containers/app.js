@@ -47,21 +47,23 @@ const App  = ()=>{
         if (response.data && response.data.results[0]){
           if(response.data.results[0].title !== popular.title) {
             onClickListItem(response.data.results[0])
-          }
-           
+          } 
         }
-     
       }
-    
-      
-
     }
 
     async function onClickListItem(movie){
       const key = await getVideo(movie)
         setpopular(movie)
         setYoutubekey(key)
-    } 
+        setRecommandations(movie)
+    }
+    
+    async function setRecommandations(movie){
+      const request = `${API_END_POINT}movie/${movie.id}/recommendations?api_key=${API_KEY}&language=fr`
+      const response = await axios.get(request)
+      setmovies(response.data.results.slice(0,5))
+    }
  
  
  
